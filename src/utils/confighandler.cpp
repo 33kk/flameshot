@@ -146,7 +146,11 @@ void ConfigHandler::setSavePathFixed(bool savePathFixed)
 
 QString ConfigHandler::uploadCommandValue()
 {
-    return m_settings.value(QStringLiteral("uploadCommand"), R"(curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload?password=ayylmao")").toString();
+    return m_settings
+      .value(
+        QStringLiteral("uploadCommand"),
+        R"(curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload?password=ayylmao")")
+      .toString();
 }
 
 void ConfigHandler::setUploadCommand(const QString& uploadCommand)

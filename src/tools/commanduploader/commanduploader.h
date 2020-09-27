@@ -64,5 +64,5 @@ private:
 
     void upload();
     void onUploadOk();
-		QProcess* process;
+    QProcess* process;
 };

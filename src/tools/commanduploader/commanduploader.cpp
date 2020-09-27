@@ -85,7 +85,7 @@ void CommandUploader::upload()
     QBuffer buffer(&byteArray);
     m_pixmap.save(&buffer, "PNG");
 
-		process = new QProcess();
+    process = new QProcess();
     process->start(ConfigHandler().uploadCommandValue());
     process->write(byteArray);
 
@@ -97,8 +97,8 @@ void CommandUploader::upload()
       [=](int exitCode) {
           m_spinner->deleteLater();
           QByteArray resultByteArr = process->readAll();
-					process->close();
-					process = nullptr;
+          process->close();
+          process = nullptr;
           QString result = QString::fromStdString(resultByteArr.toStdString());
           if (exitCode == 0) {
               QStringList lines = result.split(QRegExp("[\\n\\r]"));
@@ -129,8 +129,10 @@ void CommandUploader::onUploadOk()
     ImageLabel* imageLabel = new ImageLabel();
     imageLabel->setScreenshot(m_pixmap);
     imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(
-      imageLabel, &ImageLabel::dragInitiated, this, &CommandUploader::startDrag);
+    connect(imageLabel,
+            &ImageLabel::dragInitiated,
+            this,
+            &CommandUploader::startDrag);
     m_vLayout->addWidget(imageLabel);
 
     m_hLayout = new QHBoxLayout();

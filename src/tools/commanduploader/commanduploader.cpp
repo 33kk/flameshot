@@ -28,18 +28,11 @@
 #include <QDesktopServices>
 #include <QDrag>
 #include <QHBoxLayout>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QLabel>
 #include <QMimeData>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QNetworkRequest>
 #include <QProcess>
 #include <QPushButton>
 #include <QShortcut>
-#include <QTimer>
-#include <QUrlQuery>
 #include <QVBoxLayout>
 #include <cstdio>
 
@@ -107,12 +100,13 @@ void CommandUploader::upload()
                   if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {
                       QApplication::clipboard()->setText(m_imageURL.toString());
                       close();
+                  } else if (lines.count() > 1 && !lines[1].isEmpty()) {
+                      m_deleteImageURL.setUrl(lines[1]);
                   }
+                  onUploadOk();
+              } else {
+                  close();
               }
-              if (lines.count() > 1 && !lines[1].isEmpty()) {
-                  m_deleteImageURL.setUrl(lines[1]);
-              }
-              onUploadOk();
           } else {
               close();
           }

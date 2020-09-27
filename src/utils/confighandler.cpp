@@ -59,7 +59,7 @@ QVector<CaptureToolButton::ButtonType> ConfigHandler::getButtons()
                 << CaptureToolButton::TYPE_UNDO << CaptureToolButton::TYPE_REDO
                 << CaptureToolButton::TYPE_COPY << CaptureToolButton::TYPE_SAVE
                 << CaptureToolButton::TYPE_EXIT
-                << CaptureToolButton::TYPE_IMAGEUPLOADER
+                << CaptureToolButton::TYPE_IMGURUPLOADER
                 << CaptureToolButton::TYPE_OPEN_APP
                 << CaptureToolButton::TYPE_PIN << CaptureToolButton::TYPE_TEXT
                 << CaptureToolButton::TYPE_CIRCLECOUNT;
@@ -142,6 +142,16 @@ bool ConfigHandler::savePathFixed()
 void ConfigHandler::setSavePathFixed(bool savePathFixed)
 {
     m_settings.setValue(QStringLiteral("savePathFixed"), savePathFixed);
+}
+
+QString ConfigHandler::uploadCommandValue()
+{
+    return m_settings.value(QStringLiteral("uploadCommand"), R"(curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload?password=ayylmao")").toString();
+}
+
+void ConfigHandler::setUploadCommand(const QString& uploadCommand)
+{
+    m_settings.setValue(QStringLiteral("uploadCommand"), uploadCommand);
 }
 
 QColor ConfigHandler::uiMainColorValue()

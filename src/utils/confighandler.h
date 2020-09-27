@@ -79,6 +79,9 @@ public:
     bool saveAfterCopyValue();
     void setSaveAfterCopy(const bool);
 
+    QString uploadCommandValue();
+    void setUploadCommand(const QString&);
+
     QString saveAfterCopyPathValue();
     void setSaveAfterCopyPath(const QString&);
 

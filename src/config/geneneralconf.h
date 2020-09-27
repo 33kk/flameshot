@@ -41,6 +41,7 @@ private slots:
     void showTrayIconChanged(bool checked);
     void autostartChanged(bool checked);
     void saveAfterCopyChanged(bool checked);
+    void uploadCommandChanged(const QString& text);
     void changeSavePath();
     void importConfiguration();
     void exportFileConfiguration();
@@ -69,7 +70,19 @@ private:
     QPushButton* m_exportButton;
     QPushButton* m_resetButton;
     QCheckBox* m_saveAfterCopy;
+		QCheckBox* m_screenshotPathFixedCheck;
     QLineEdit* m_savePath;
+		QLineEdit* m_uploadCommand;
     QPushButton* m_changeSaveButton;
-    QCheckBox* m_screenshotPathFixedCheck;
+
+    void initShowHelp();
+    void initShowSidePanelButton();
+    void initShowDesktopNotification();
+    void initShowTrayIcon();
+    void initConfingButtons();
+    void initAutostart();
+    void initCloseAfterCapture();
+    void initCopyAndCloseAfterUpload();
+    void initSaveAfterCopy();
+    void initUploadCommand();
 };

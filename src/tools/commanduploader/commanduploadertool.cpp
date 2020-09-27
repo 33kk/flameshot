@@ -15,50 +15,50 @@
 //     You should have received a copy of the GNU General Public License
 //     along with Flameshot.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "imguruploadertool.h"
-#include "imguruploader.h"
+#include "commanduploadertool.h"
+#include "commanduploader.h"
 #include <QPainter>
 
-ImgurUploaderTool::ImgurUploaderTool(QObject* parent)
+CommandUploaderTool::CommandUploaderTool(QObject* parent)
   : AbstractActionTool(parent)
 {}
 
-bool ImgurUploaderTool::closeOnButtonPressed() const
+bool CommandUploaderTool::closeOnButtonPressed() const
 {
     return true;
 }
 
-QIcon ImgurUploaderTool::icon(const QColor& background, bool inEditor) const
+QIcon CommandUploaderTool::icon(const QColor& background, bool inEditor) const
 {
     Q_UNUSED(inEditor);
     return QIcon(iconPath(background) + "cloud-upload.svg");
 }
-QString ImgurUploaderTool::name() const
+QString CommandUploaderTool::name() const
 {
-    return tr("Image Uploader");
+    return tr("Upload Using Command");
 }
 
-ToolType ImgurUploaderTool::nameID() const
+ToolType CommandUploaderTool::nameID() const
 {
-    return ToolType::IMGURUPLOADER;
+    return ToolType::COMMANDUPLOADER;
 }
 
-QString ImgurUploaderTool::description() const
+QString CommandUploaderTool::description() const
 {
-    return tr("Upload the selection to Imgur");
+    return tr("Upload using command specified in settings");
 }
 
-QWidget* ImgurUploaderTool::widget()
+QWidget* CommandUploaderTool::widget()
 {
-    return new ImgurUploader(capture);
+    return new CommandUploader(capture);
 }
 
-CaptureTool* ImgurUploaderTool::copy(QObject* parent)
+CaptureTool* CommandUploaderTool::copy(QObject* parent)
 {
-    return new ImgurUploaderTool(parent);
+    return new CommandUploaderTool(parent);
 }
 
-void ImgurUploaderTool::pressed(const CaptureContext& context)
+void CommandUploaderTool::pressed(const CaptureContext& context)
 {
     capture = context.selectedScreenshotArea();
     emit requestAction(REQ_CAPTURE_DONE_OK);

@@ -133,9 +133,10 @@ static std::map<CaptureToolButton::ButtonType, int> buttonTypeOrder{
     { CaptureToolButton::TYPE_COPY, 14 },
     { CaptureToolButton::TYPE_SAVE, 15 },
     { CaptureToolButton::TYPE_EXIT, 16 },
-    { CaptureToolButton::TYPE_IMAGEUPLOADER, 17 },
+    { CaptureToolButton::TYPE_IMGURUPLOADER, 17 },
     { CaptureToolButton::TYPE_OPEN_APP, 18 },
     { CaptureToolButton::TYPE_PIN, 19 },
+    { CaptureToolButton::TYPE_COMMANDUPLOADER, 20 },
 };
 
 int CaptureToolButton::getPriorityByButton(CaptureToolButton::ButtonType b)
@@ -163,8 +164,9 @@ QVector<CaptureToolButton::ButtonType>
       CaptureToolButton::TYPE_COPY,
       CaptureToolButton::TYPE_SAVE,
       CaptureToolButton::TYPE_EXIT,
-      CaptureToolButton::TYPE_IMAGEUPLOADER,
+      CaptureToolButton::TYPE_IMGURUPLOADER,
       CaptureToolButton::TYPE_OPEN_APP,
       CaptureToolButton::TYPE_PIN,
       CaptureToolButton::TYPE_CIRCLECOUNT,
+      CaptureToolButton::TYPE_COMMANDUPLOADER,
   };

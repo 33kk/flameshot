@@ -40,6 +40,7 @@ GeneneralConf::GeneneralConf(QWidget* parent)
     initShowTrayIcon();
     initAutostart();
     initSaveAfterCopy();
+    initUploadCommand();
 
     // this has to be at the end
     initConfingButtons();
@@ -302,6 +303,33 @@ void GeneneralConf::initSaveAfterCopy()
 
     vboxLayout->addLayout(pathLayout);
     vboxLayout->addWidget(m_screenshotPathFixedCheck);
+}
+
+void GeneneralConf::initUploadCommand()
+{
+    QHBoxLayout* uploadCommandLayout = new QHBoxLayout();
+    m_layout->addStretch();
+    QGroupBox* box = new QGroupBox(tr("Upload Command"));
+    box->setFlat(true);
+    box->setLayout(uploadCommandLayout);
+    m_layout->addWidget(box);
+
+    m_uploadCommand = new QLineEdit(
+      QStandardPaths::writableLocation(QStandardPaths::PicturesLocation), this);
+    QString foreground = this->palette().foreground().color().name();
+    m_uploadCommand->setStyleSheet(QStringLiteral("color: %1").arg(foreground));
+    m_uploadCommand->setText(ConfigHandler().uploadCommandValue());
+    uploadCommandLayout->addWidget(m_uploadCommand);
+
+    connect(m_uploadCommand,
+            &QLineEdit::textEdited,
+            this,
+            &GeneneralConf::uploadCommandChanged);
+}
+
+void GeneneralConf::uploadCommandChanged(const QString& text)
+{
+    ConfigHandler().setUploadCommand(text);
 }
 
 void GeneneralConf::saveAfterCopyChanged(bool checked)

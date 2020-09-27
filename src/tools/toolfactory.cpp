@@ -19,6 +19,7 @@
 #include "arrow/arrowtool.h"
 #include "circle/circletool.h"
 #include "circlecount/circlecounttool.h"
+#include "commanduploader/commanduploadertool.h"
 #include "copy/copytool.h"
 #include "exit/exittool.h"
 #include "imgur/imguruploadertool.h"
@@ -45,7 +46,7 @@ ToolFactory::ToolFactory(QObject* parent)
 CaptureTool* ToolFactory::CreateTool(CaptureToolButton::ButtonType t,
                                      QObject* parent)
 {
-    CaptureTool* tool;
+    CaptureTool* tool = nullptr;
     switch (t) {
         case CaptureToolButton::TYPE_ARROW:
             tool = new ArrowTool(parent);
@@ -59,8 +60,11 @@ CaptureTool* ToolFactory::CreateTool(CaptureToolButton::ButtonType t,
         case CaptureToolButton::TYPE_EXIT:
             tool = new ExitTool(parent);
             break;
-        case CaptureToolButton::TYPE_IMAGEUPLOADER:
+        case CaptureToolButton::TYPE_IMGURUPLOADER:
             tool = new ImgurUploaderTool(parent);
+            break;
+        case CaptureToolButton::TYPE_COMMANDUPLOADER:
+            tool = new CommandUploaderTool(parent);
             break;
         case CaptureToolButton::TYPE_DRAWER:
             tool = new LineTool(parent);
@@ -106,10 +110,6 @@ CaptureTool* ToolFactory::CreateTool(CaptureToolButton::ButtonType t,
             break;
         case CaptureToolButton::TYPE_CIRCLECOUNT:
             tool = new CircleCountTool(parent);
-            break;
-
-        default:
-            tool = nullptr;
             break;
     }
     return tool;

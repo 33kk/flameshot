@@ -13,6 +13,12 @@ target_sources(
 )
 target_sources(
   flameshot
+  PRIVATE commanduploader/commanduploader.h
+          commanduploader/commanduploadertool.h
+          commanduploader/commanduploader.cpp
+          commanduploader/commanduploadertool.cpp)
+target_sources(
+  flameshot
   PRIVATE launcher/applaunchertool.h
           launcher/applauncherwidget.h
           launcher/launcheritemdelegate.h

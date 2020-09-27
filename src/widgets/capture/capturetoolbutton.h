@@ -47,13 +47,14 @@ public:
         TYPE_COPY = 10,
         TYPE_SAVE = 11,
         TYPE_EXIT = 12,
-        TYPE_IMAGEUPLOADER = 13,
+        TYPE_IMGURUPLOADER = 13,
         TYPE_OPEN_APP = 14,
         TYPE_PIXELATE = 15,
         TYPE_REDO = 16,
         TYPE_PIN = 17,
         TYPE_TEXT = 18,
         TYPE_CIRCLECOUNT = 19,
+        TYPE_COMMANDUPLOADER = 20,
 
     };
     Q_ENUM(ButtonType)

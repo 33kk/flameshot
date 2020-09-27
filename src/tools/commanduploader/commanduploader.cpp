@@ -101,7 +101,7 @@ void CommandUploader::upload()
           process = nullptr;
           QString result = QString::fromStdString(resultByteArr.toStdString());
           if (exitCode == 0) {
-              QStringList lines = result.split(QRegExp("[\\n\\r]"));
+              QStringList lines = result.split(QRegExp(R"((\r\n|\r|\n))"));
               if (lines.count() > 0 && !lines[0].isEmpty()) {
                   m_imageURL.setUrl(lines[0]);
                   if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {

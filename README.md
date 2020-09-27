@@ -49,6 +49,7 @@
 - [Features](#features)
 - [Usage](#usage)
   - [CLI configuration](#cli-configuration)
+  - [Upload Using Command](#upload-using-command)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
   - [Local](#local)
   - [Global](#global)
@@ -160,6 +161,14 @@ You can use the graphical menu to configure Flameshot, but alternatively you can
     ```shell
     flameshot config -h
     ```
+### Upload Using Command
+
+You can upload to any image hosting service using command. To change it open configuration menu and in "General" tab change "Upload Command". Flameshot will output image data to standard input (STDIN), command should print image url on first line and optionally deletion url on second.
+
+Example for i.nuuls.com:
+```shell
+curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload"
+```
 
 ## Keyboard shortcuts
 

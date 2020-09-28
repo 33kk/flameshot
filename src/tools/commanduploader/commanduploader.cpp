@@ -97,23 +97,31 @@ void CommandUploader::upload()
               QStringList lines = result.split(QRegExp(R"((\r\n|\r|\n))"));
               if (lines.count() > 0 && !lines[0].isEmpty()) {
                   m_imageURL.setUrl(lines[0]);
+                  bool showDelete = false;
                   if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {
                       QApplication::clipboard()->setText(m_imageURL.toString());
+                      SystemNotification().sendMessage(
+                        QObject::tr("URL copied to clipboard."));
                       close();
                   } else if (lines.count() > 1 && !lines[1].isEmpty()) {
                       m_deleteImageURL.setUrl(lines[1]);
+                      showDelete = true;
                   }
-                  onUploadOk();
+                  onUploadOk(showDelete);
               } else {
                   close();
+                  SystemNotification().sendMessage(
+                    QObject::tr("Image upload failed."));
               }
           } else {
               close();
+              SystemNotification().sendMessage(
+                QObject::tr("Image upload failed."));
           }
       });
 }
 
-void CommandUploader::onUploadOk()
+void CommandUploader::onUploadOk(bool showDelete = false)
 {
     m_infoLabel->deleteLater();
 
@@ -133,22 +141,26 @@ void CommandUploader::onUploadOk()
     m_vLayout->addLayout(m_hLayout);
 
     m_copyUrlButton = new QPushButton(tr("Copy URL"));
-    m_openUrlButton = new QPushButton(tr("Open URL"));
-    m_openDeleteUrlButton = new QPushButton(tr("Delete image"));
-    m_toClipboardButton = new QPushButton(tr("Image to Clipboard."));
     m_hLayout->addWidget(m_copyUrlButton);
-    m_hLayout->addWidget(m_openUrlButton);
-    m_hLayout->addWidget(m_openDeleteUrlButton);
-    m_hLayout->addWidget(m_toClipboardButton);
-
     connect(
       m_copyUrlButton, &QPushButton::clicked, this, &CommandUploader::copyURL);
+
+    m_openUrlButton = new QPushButton(tr("Open URL"));
+    m_hLayout->addWidget(m_openUrlButton);
     connect(
       m_openUrlButton, &QPushButton::clicked, this, &CommandUploader::openURL);
-    connect(m_openDeleteUrlButton,
-            &QPushButton::clicked,
-            this,
-            &CommandUploader::openDeleteURL);
+
+    if (showDelete) {
+        m_openDeleteUrlButton = new QPushButton(tr("Delete image"));
+        m_hLayout->addWidget(m_openDeleteUrlButton);
+        connect(m_openDeleteUrlButton,
+                &QPushButton::clicked,
+                this,
+                &CommandUploader::openDeleteURL);
+    }
+
+    m_toClipboardButton = new QPushButton(tr("Image to Clipboard."));
+    m_hLayout->addWidget(m_toClipboardButton);
     connect(m_toClipboardButton,
             &QPushButton::clicked,
             this,

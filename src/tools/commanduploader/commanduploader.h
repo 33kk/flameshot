@@ -63,6 +63,6 @@ private:
     NotificationWidget* m_notification;
 
     void upload();
-    void onUploadOk();
+    void onUploadOk(bool showDelete);
     QProcess* process;
 };

@@ -189,7 +189,7 @@ curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload"
 
 Example for sxcu.net:
 ```shell
-sh -c "curl --silent -X POST -F 'image=@-;type=image/png;filename=s.png' -F noembed=true 'https://sxcu.net/upload' | jq '{fileName: (.url[17:-5] + ".png"), imageUrl: .url, deleteUrl: .del_url}'
+sh -c "curl --silent -X POST -F 'image=@-;type=image/png;filename=s.png' -F noembed=true 'https://sxcu.net/upload' | jq '{fileName: (.url[17:-5] + """.png"""), imageUrl: .url, deleteUrl: .del_url}'"
 ```
 
 ## Keyboard shortcuts

@@ -4,36 +4,42 @@
 #define HISTORYPIXMAP_MAX_PREVIEW_WIDTH 250
 #define HISTORYPIXMAP_MAX_PREVIEW_HEIGHT 100
 
-#include <QList>
+#include <QJsonObject>
+#include <QMap>
 #include <QPixmap>
 #include <QString>
 
-struct HISTORY_FILE_NAME
+class HistoryItem
 {
-    QString file;
-    QString token;
-    QString type;
+public:
+    HistoryItem();
+    HistoryItem(QString imageUrl);
+    HistoryItem(QString imageUrl, QString deleteUrl);
+
+    QString imageUrl;
+    QString deleteUrl;
 };
 
 class History
 {
 public:
-    History();
-
-    void save(const QPixmap&, const QString&);
-    const QList<QString>& history();
+    void save(const QPixmap& pixmap,
+              const QString& fileName,
+              const QString& imageUrl,
+              const QString& deleteUrl);
+    void remove(const QString& fileName);
+    const QMap<QString, HistoryItem>& history();
     const QString& path();
-
-    const HISTORY_FILE_NAME& unpackFileName(const QString&);
-    const QString& packFileName(const QString&, const QString&, const QString&);
+    static History* getInstance();
 
 private:
-    QString m_historyPath;
-    QList<QString> m_thumbs;
+    History();
 
-    // temporary variables
-    QString m_packedFileName;
-    HISTORY_FILE_NAME m_unpackedFileName;
+    void saveJson();
+    QString m_historyPath;
+    QJsonObject m_historyMetadata;
+    QMap<QString, HistoryItem> m_history;
+    static History* m_instance;
 };
 
 #endif // HISTORY_H

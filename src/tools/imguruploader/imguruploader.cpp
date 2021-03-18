@@ -76,11 +76,14 @@ void ImgurUploader::handleReply(QNetworkReply* reply)
         QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
         QJsonObject json = response.object();
         QJsonObject data = json[QStringLiteral("data")].toObject();
-        m_imageURL.setUrl(data[QStringLiteral("link")].toString());
+
+        QString imageUrl = data[QStringLiteral("link")].toString();
+        m_imageURL.setUrl(imageUrl);
 
         auto deleteToken = data[QStringLiteral("deletehash")].toString();
-        m_deleteImageURL.setUrl(
-          QStringLiteral("https://imgur.com/delete/%1").arg(deleteToken));
+
+        QString deleteImageUrl = QStringLiteral("https://imgur.com/delete/%1").arg(deleteToken);
+        m_deleteImageURL.setUrl(deleteImageUrl);
 
         // save history
         QString imageName = m_imageURL.toString();
@@ -88,11 +91,11 @@ void ImgurUploader::handleReply(QNetworkReply* reply)
         if (lastSlash >= 0) {
             imageName = imageName.mid(lastSlash + 1);
         }
+        imageName = "imgur-" + imageName;
 
         // save image to history
-        History history;
-        imageName = history.packFileName("imgur", deleteToken, imageName);
-        history.save(m_pixmap, imageName);
+        History *history = History::getInstance();
+        history->save(m_pixmap, imageName, imageUrl, deleteImageUrl);
 
         if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {
             SystemNotification().sendMessage(

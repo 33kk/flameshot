@@ -21,12 +21,12 @@ QIcon ImgurUploaderTool::icon(const QColor& background, bool inEditor) const
 }
 QString ImgurUploaderTool::name() const
 {
-    return tr("Image Uploader");
+    return tr("Imgur Uploader");
 }
 
 ToolType ImgurUploaderTool::nameID() const
 {
-    return ToolType::IMGUR;
+    return ToolType::IMGURUPLOADER;
 }
 
 QString ImgurUploaderTool::description() const

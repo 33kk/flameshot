@@ -31,13 +31,12 @@ HistoryWidget::HistoryWidget(QWidget* parent)
     layout->setContentsMargins(QMargins(0, 0, 0, 0));
     setLayout(layout);
 
-    m_pVBox = new QVBoxLayout(this);
-    m_pVBox->setAlignment(Qt::AlignTop);
-
     QScrollArea* scrollArea = new QScrollArea(this);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     scrollArea->setWidgetResizable(true);
-    scrollArea->setGeometry(this->frameGeometry());
+
+    m_pVBox = new QVBoxLayout(this);
+    m_pVBox->setAlignment(Qt::AlignTop);
 
     QWidget* widget = new QWidget();
     scrollArea->setWidget(widget);
@@ -71,15 +70,16 @@ void HistoryWidget::loadHistory()
     clearHistoryLayout(m_pVBox);
 
     // read history files
-    History history = History();
-    QList<QString> historyFiles = history.history();
+    History* history = History::getInstance();
+    QMap<QString, HistoryItem> historyFiles = history->history();
 
     if (historyFiles.isEmpty()) {
         setEmptyMessage();
     } else {
         // generate history list
-        foreach (QString fileName, historyFiles) {
-            addLine(history.path(), fileName);
+        foreach (const QString& key, historyFiles.keys()) {
+            HistoryItem item = historyFiles[key];
+            addLine(history->path(), key, item.imageUrl, item.deleteUrl);
         }
     }
 }
@@ -93,15 +93,13 @@ void HistoryWidget::setEmptyMessage()
     m_pVBox->addWidget(buttonEmpty);
 }
 
-void HistoryWidget::addLine(const QString& path, const QString& fileName)
+void HistoryWidget::addLine(const QString& path,
+                            const QString& fileName,
+                            const QString& imageUrl,
+                            const QString& deleteUrl)
 {
     QHBoxLayout* phbl = new QHBoxLayout();
     QString fullFileName = path + fileName;
-
-    History history;
-    HISTORY_FILE_NAME unpackFileName = history.unpackFileName(fileName);
-
-    QString url = "https://imgur.com/" + unpackFileName.file;
 
     // load pixmap
     QPixmap pixmap;
@@ -121,7 +119,7 @@ void HistoryWidget::addLine(const QString& path, const QString& fileName)
     // get file info
     QFileInfo* pFileInfo = new QFileInfo(fullFileName);
     QString lastModified =
-      pFileInfo->lastModified().toString("yyyy-MM-dd\nhh:mm:ss");
+      pFileInfo->lastModified().toString(" yyyy-MM-dd\nhh:mm:ss\n" + fileName);
 
     // screenshot preview
     QLabel* pScreenshot = new QLabel();
@@ -141,7 +139,7 @@ void HistoryWidget::addLine(const QString& path, const QString& fileName)
     buttonCopyUrl->setText(tr("Copy URL"));
     buttonCopyUrl->setMinimumHeight(HISTORYPIXMAP_MAX_PREVIEW_HEIGHT);
     connect(buttonCopyUrl, &QPushButton::clicked, this, [=]() {
-        QApplication::clipboard()->setText(url);
+        QApplication::clipboard()->setText(imageUrl);
         m_notification->showMessage(tr("URL copied to clipboard."));
         this->close();
     });
@@ -151,7 +149,7 @@ void HistoryWidget::addLine(const QString& path, const QString& fileName)
     buttonOpen->setText(tr("Open in browser"));
     buttonOpen->setMinimumHeight(HISTORYPIXMAP_MAX_PREVIEW_HEIGHT);
     connect(buttonOpen, &QPushButton::clicked, this, [=]() {
-        QDesktopServices::openUrl(QUrl(url));
+        QDesktopServices::openUrl(QUrl(imageUrl));
         this->close();
     });
 
@@ -170,10 +168,10 @@ void HistoryWidget::addLine(const QString& path, const QString& fileName)
                 QMessageBox::Yes | QMessageBox::No)) {
             return;
         }
-        QDesktopServices::openUrl(
-          QUrl(QStringLiteral("https://imgur.com/delete/%1")
-                 .arg(unpackFileName.token)));
-        removeCacheFile(fullFileName);
+        QDesktopServices::openUrl(QUrl(deleteUrl));
+
+        History* history = History::getInstance();
+        history->remove(fileName);
         removeLayoutItem(phbl);
     });
 

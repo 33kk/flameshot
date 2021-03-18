@@ -49,7 +49,7 @@ QVector<CaptureToolButton::ButtonType> ConfigHandler::getButtons()
                 << CaptureToolButton::TYPE_UNDO << CaptureToolButton::TYPE_REDO
                 << CaptureToolButton::TYPE_COPY << CaptureToolButton::TYPE_SAVE
                 << CaptureToolButton::TYPE_EXIT
-                << CaptureToolButton::TYPE_IMAGEUPLOADER
+                << CaptureToolButton::TYPE_IMGURUPLOADER
 #if not defined(Q_OS_MACOS)
                 << CaptureToolButton::TYPE_OPEN_APP
 #endif
@@ -555,6 +555,21 @@ bool ConfigHandler::saveAfterCopyValue()
 void ConfigHandler::setSaveAfterCopy(const bool save)
 {
     m_settings.setValue(QStringLiteral("saveAfterCopy"), save);
+}
+
+QString ConfigHandler::uploaderCommandValue()
+{
+    m_strRes = m_settings.value(QStringLiteral("uploadCommand")).toString();
+    if (m_strRes.isEmpty()) {
+        m_strRes =
+          'curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload"';
+    }
+    return m_strRes;
+}
+
+void ConfigHandler::setUploaderCommand(const QString& pattern)
+{
+    return m_settings.setValue(QStringLiteral("uploadCommand"), pattern);
 }
 
 bool ConfigHandler::copyPathAfterSaveEnabled()

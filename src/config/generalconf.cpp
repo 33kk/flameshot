@@ -35,6 +35,7 @@ GeneralConf::GeneralConf(QWidget* parent)
     initCopyPathAfterSave();
     initUseJpgForClipboard();
     initSaveAfterCopy();
+    initCommandUploader();
     initUploadHistoryMaxSize();
     initUndoLimit();
 
@@ -183,6 +184,7 @@ void GeneralConf::setActualFormData()
     m_copyPathAfterSave->setChecked(config.copyPathAfterSaveEnabled());
     m_saveAfterCopy->setChecked(config.saveAfterCopyValue());
     m_savePath->setText(config.savePath());
+    m_uploaderCommand->setText(config.uploaderCommandValue());
     m_screenshotPathFixedCheck->setChecked(config.savePathFixed());
     m_historyConfirmationToDelete->setChecked(
       config.historyConfirmationToDelete());
@@ -399,6 +401,36 @@ void GeneralConf::initSaveAfterCopy()
 
     vboxLayout->addLayout(pathLayout);
     vboxLayout->addWidget(m_screenshotPathFixedCheck);
+}
+
+void GeneralConf::initCommandUploader()
+{
+    QGroupBox* box = new QGroupBox(tr("Image Uploader Command"));
+    box->setFlat(true);
+    m_layout->addWidget(box);
+    m_layout->addStretch();
+
+    QVBoxLayout* vboxLayout = new QVBoxLayout();
+    box->setLayout(vboxLayout);
+
+    QString command = ConfigHandler().uploaderCommandValue();
+
+    m_uploaderCommand = new QLineEdit(command, this);
+    QString foreground = this->palette().windowText().color().name();
+    m_uploaderCommand->setStyleSheet(
+      QStringLiteral("color: %1").arg(foreground));
+
+    connect(m_uploaderCommand,
+            &QLineEdit::editingFinished,
+            this,
+            &GeneralConf::uploaderCommandChanged);
+
+    vboxLayout->addWidget(m_uploaderCommand);
+}
+
+void GeneralConf::uploaderCommandChanged()
+{
+    ConfigHandler().setUploaderCommand(m_uploaderCommand->text());
 }
 
 void GeneralConf::historyConfirmationToDelete(bool checked)

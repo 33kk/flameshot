@@ -38,6 +38,7 @@ private slots:
     void resetConfiguration();
     void togglePathFixed();
     void useJpgForClipboardChanged(bool checked);
+    void uploaderCommandChanged();
 
 private:
     const QString chooseFolder(const QString currentPath = "");
@@ -55,6 +56,7 @@ private:
     void initShowStartupLaunchMessage();
     void initCopyAndCloseAfterUpload();
     void initSaveAfterCopy();
+    void initCommandUploader();
     void initCopyPathAfterSave();
     void initUseJpgForClipboard();
 
@@ -76,6 +78,7 @@ private:
     QPushButton* m_resetButton;
     QCheckBox* m_saveAfterCopy;
     QLineEdit* m_savePath;
+    QLineEdit* m_uploaderCommand;
     QPushButton* m_changeSaveButton;
     QCheckBox* m_screenshotPathFixedCheck;
     QCheckBox* m_historyConfirmationToDelete;

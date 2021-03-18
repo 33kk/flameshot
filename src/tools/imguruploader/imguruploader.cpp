@@ -82,7 +82,8 @@ void ImgurUploader::handleReply(QNetworkReply* reply)
 
         auto deleteToken = data[QStringLiteral("deletehash")].toString();
 
-        QString deleteImageUrl = QStringLiteral("https://imgur.com/delete/%1").arg(deleteToken);
+        QString deleteImageUrl =
+          QStringLiteral("https://imgur.com/delete/%1").arg(deleteToken);
         m_deleteImageURL.setUrl(deleteImageUrl);
 
         // save history
@@ -94,7 +95,7 @@ void ImgurUploader::handleReply(QNetworkReply* reply)
         imageName = "imgur-" + imageName;
 
         // save image to history
-        History *history = History::getInstance();
+        History* history = History::getInstance();
         history->save(m_pixmap, imageName, imageUrl, deleteImageUrl);
 
         if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {

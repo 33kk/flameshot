@@ -13,6 +13,7 @@
 #include <QBuffer>
 #include <QClipboard>
 #include <QCursor>
+#include <QDateTime>
 #include <QDesktopServices>
 #include <QDrag>
 #include <QGuiApplication>
@@ -21,16 +22,15 @@
 #include <QJsonObject>
 #include <QLabel>
 #include <QMimeData>
+#include <QProcess>
 #include <QPushButton>
 #include <QRect>
-#include <QScreen>
 #include <QRegExp>
+#include <QScreen>
 #include <QShortcut>
 #include <QTimer>
 #include <QUrlQuery>
 #include <QVBoxLayout>
-#include <QProcess>
-#include <QDateTime>
 
 CommandUploader::CommandUploader(const QPixmap& capture, QWidget* parent)
   : QWidget(parent)
@@ -86,23 +86,20 @@ void CommandUploader::upload()
 
     m_process = new QProcess();
 
-    connect(
-        m_process,
-        SIGNAL(finished(int)),
-        this,
-        SLOT(processExited(int)));
+    connect(m_process, SIGNAL(finished(int)), this, SLOT(processExited(int)));
 
     m_process->start(ConfigHandler().uploaderCommandValue());
     m_process->write(byteArray);
 
     m_process->closeWriteChannel();
-
 }
 
-void CommandUploader::processExited(int exitCode) {
+void CommandUploader::processExited(int exitCode)
+{
     m_spinner->deleteLater();
     QByteArray resultByteArr = m_process->readAllStandardOutput();
-    QString error = QString::fromStdString(m_process->readAllStandardError().toStdString());
+    QString error =
+      QString::fromStdString(m_process->readAllStandardError().toStdString());
     if (exitCode == 0) {
         QString fileName = "";
         QString imageUrl = "";
@@ -120,31 +117,31 @@ void CommandUploader::processExited(int exitCode) {
             if (obj["deleteUrl"].isString()) {
                 deleteUrl = obj["deleteUrl"].toString();
             }
-        }
-        else {
-            QString result = QString::fromStdString(resultByteArr.toStdString());
+        } else {
+            QString result =
+              QString::fromStdString(resultByteArr.toStdString());
             QStringList lines = result.split(QRegExp(R"((\r\n|\r|\n))"));
             if (lines.count() > 0) {
                 if (lines.count() > 1) {
                     imageUrl = lines[0];
                     deleteUrl = lines[1];
-                }
-                else {
+                } else {
                     imageUrl = lines[0];
                 }
-            }
-            else {
+            } else {
                 m_infoLabel->setText(error);
             }
         }
         if (!imageUrl.isEmpty()) {
             m_imageURL.setUrl(imageUrl);
 
-            History *history = History::getInstance();
+            History* history = History::getInstance();
             bool showDelete = false;
 
             if (fileName.isEmpty()) {
-                QString currentDateTime = QDateTime::currentDateTime().toString(Qt::ISODate).replace(":", "-");
+                QString currentDateTime = QDateTime::currentDateTime()
+                                            .toString(Qt::ISODate)
+                                            .replace(":", "-");
                 fileName = currentDateTime + ".png";
             }
             if (!deleteUrl.isEmpty()) {
@@ -161,8 +158,7 @@ void CommandUploader::processExited(int exitCode) {
                 close();
             }
             onUploadOk(showDelete);
-        }
-        else {
+        } else {
             m_infoLabel->setText(error);
         }
     } else {
@@ -183,8 +179,10 @@ void CommandUploader::onUploadOk(bool showDelete)
     ImageLabel* imageLabel = new ImageLabel();
     imageLabel->setScreenshot(m_pixmap);
     imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    connect(
-      imageLabel, &ImageLabel::dragInitiated, this, &CommandUploader::startDrag);
+    connect(imageLabel,
+            &ImageLabel::dragInitiated,
+            this,
+            &CommandUploader::startDrag);
     m_vLayout->addWidget(imageLabel);
 
     m_hLayout = new QHBoxLayout();

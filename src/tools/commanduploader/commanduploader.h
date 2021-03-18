@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <QWidget>
 #include <QUrl>
+#include <QWidget>
 
 class QNetworkReply;
 class QNetworkAccessManager;

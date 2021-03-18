@@ -53,6 +53,7 @@
 - [Usage](#usage)
   - [CLI configuration](#cli-configuration)
   - [Config file](#config-file)
+  - [Upload using command](#upload-using-command)
 - [Keyboard Shortcuts](#keyboard-shortcuts)
   - [Local](#local)
   - [Global](#global)
@@ -168,6 +169,28 @@ You can use the graphical menu to configure Flameshot, but alternatively you can
 ### Config file
 You can also edit some of the settings (like overriding the default colors) in the configuration file located at `~/.config/flameshot/flameshot.ini`.
 
+### Upload Using Command
+
+You can upload to any image hosting service using a command, which can be set in "General" settings. Flameshot will write PNG image data to standard input (STDIN) and the command should output JSON with following format:
+
+```json
+{
+  "fileName": "filename.png",
+  "imageUrl": "https://i.example.com/filename.png",
+  "deleteUrl": "https://i.example.com/delete/filename.png?token=123"
+}
+```
+`fileName` and `deleteUrl` are optional.
+
+Example for i.nuuls.com:
+```shell
+curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload"
+```
+
+Example for sxcu.net:
+```shell
+sh -c "curl --silent -X POST -F 'image=@-;type=image/png;filename=s.png' -F noembed=true 'https://sxcu.net/upload' | jq '{fileName: (.url[17:-5] + ".png"), imageUrl: .url, deleteUrl: .del_url}'
+```
 
 ## Keyboard shortcuts
 

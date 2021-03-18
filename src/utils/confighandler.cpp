@@ -561,8 +561,8 @@ QString ConfigHandler::uploaderCommandValue()
 {
     m_strRes = m_settings.value(QStringLiteral("uploadCommand")).toString();
     if (m_strRes.isEmpty()) {
-        m_strRes =
-          "curl -X POST -F \"file=@/dev/stdin;type=image/png\" \"https://i.nuuls.com/upload\"";
+        m_strRes = "curl -X POST -F \"file=@/dev/stdin;type=image/png\" "
+                   "\"https://i.nuuls.com/upload\"";
     }
     return m_strRes;
 }

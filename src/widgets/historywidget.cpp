@@ -119,7 +119,7 @@ void HistoryWidget::addLine(const QString& path,
     // get file info
     QFileInfo* pFileInfo = new QFileInfo(fullFileName);
     QString lastModified =
-      pFileInfo->lastModified().toString(" yyyy-MM-dd\nhh:mm:ss\n" + fileName);
+      pFileInfo->lastModified().toString("yyyy-MM-dd\nhh:mm:ss\n") + fileName;
 
     // screenshot preview
     QLabel* pScreenshot = new QLabel();
@@ -127,7 +127,7 @@ void HistoryWidget::addLine(const QString& path,
     pScreenshot->setMinimumHeight(HISTORYPIXMAP_MAX_PREVIEW_HEIGHT);
     pScreenshot->setPixmap(pixmap);
 
-    // screenshot datetime
+    // screenshot datetime and filename
     QLabel* pScreenshotText = new QLabel();
     pScreenshotText->setStyleSheet("padding: 5px;");
     pScreenshotText->setMinimumHeight(HISTORYPIXMAP_MAX_PREVIEW_HEIGHT);

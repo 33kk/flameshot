@@ -5,9 +5,10 @@
 #include "arrow/arrowtool.h"
 #include "circle/circletool.h"
 #include "circlecount/circlecounttool.h"
+#include "commanduploader/commanduploadertool.h"
 #include "copy/copytool.h"
 #include "exit/exittool.h"
-#include "imgur/imguruploadertool.h"
+#include "imguruploader/imguruploadertool.h"
 #include "launcher/applaunchertool.h"
 #include "line/linetool.h"
 #include "marker/markertool.h"
@@ -47,8 +48,11 @@ CaptureTool* ToolFactory::CreateTool(CaptureToolButton::ButtonType t,
         case CaptureToolButton::TYPE_EXIT:
             tool = new ExitTool(parent);
             break;
-        case CaptureToolButton::TYPE_IMAGEUPLOADER:
+        case CaptureToolButton::TYPE_IMGURUPLOADER:
             tool = new ImgurUploaderTool(parent);
+            break;
+        case CaptureToolButton::TYPE_IMAGEUPLOADER:
+            tool = new CommandUploaderTool(parent);
             break;
         case CaptureToolButton::TYPE_DRAWER:
             tool = new LineTool(parent);

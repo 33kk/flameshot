@@ -23,7 +23,10 @@ public:
 private:
     void clearHistoryLayout(QLayout* layout);
 
-    void addLine(const QString&, const QString&);
+    void addLine(const QString& path,
+                 const QString& fileName,
+                 const QString& imageUrl,
+                 const QString& deleteUrl);
     void setEmptyMessage();
     void removeItem(QLayout* pl,
                     const QString& s3FileName,

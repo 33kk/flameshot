@@ -2,8 +2,20 @@
 #include "src/utils/confighandler.h"
 #include <QDir>
 #include <QFile>
+#include <QJsonDocument>
 #include <QProcessEnvironment>
 #include <QStringList>
+
+HistoryItem::HistoryItem() {}
+HistoryItem::HistoryItem(QString imageUrl)
+{
+    this->imageUrl = imageUrl;
+}
+HistoryItem::HistoryItem(QString imageUrl, QString deleteUrl)
+{
+    this->imageUrl = imageUrl;
+    this->deleteUrl = deleteUrl;
+}
 
 History::History()
 {
@@ -21,6 +33,8 @@ History::History()
     QDir dir = QDir(m_historyPath);
     if (!dir.exists())
         dir.mkpath(".");
+
+    history();
 }
 
 const QString& History::path()
@@ -28,8 +42,44 @@ const QString& History::path()
     return m_historyPath;
 }
 
-void History::save(const QPixmap& pixmap, const QString& fileName)
+History* History::m_instance;
+
+History* History::getInstance()
 {
+    if (m_instance == 0) {
+        m_instance = new History();
+    }
+    return m_instance;
+}
+
+void History::saveJson()
+{
+    QJsonDocument metadataDocument = QJsonDocument();
+    QJsonObject metadataObject = QJsonObject();
+
+    foreach (const QString& key, m_history.keys()) {
+        HistoryItem historyItem = m_history.value(key);
+        QJsonObject obj = QJsonObject();
+        obj["imageUrl"] = historyItem.imageUrl;
+        if (!historyItem.deleteUrl.isEmpty()) {
+            obj["deleteUrl"] = historyItem.deleteUrl;
+        }
+        metadataObject[key] = obj;
+    }
+    metadataDocument.setObject(metadataObject);
+
+    QFile metadataFile = QFile(path() + "metadata.json");
+    metadataFile.open(QIODevice::WriteOnly);
+    metadataFile.write(metadataDocument.toJson());
+}
+
+void History::save(const QPixmap& pixmap,
+                   const QString& fileName,
+                   const QString& imageUrl,
+                   const QString& deleteUrl)
+{
+    history();
+
     // scale preview only in local disk
     QPixmap pixmapScaled = QPixmap(pixmap);
     if (pixmap.height() / HISTORYPIXMAP_MAX_PREVIEW_HEIGHT >=
@@ -43,72 +93,42 @@ void History::save(const QPixmap& pixmap, const QString& fileName)
     QFile file(path() + fileName);
     file.open(QIODevice::WriteOnly);
     pixmapScaled.save(&file, "PNG");
+    m_history.insert(fileName, HistoryItem(imageUrl, deleteUrl));
 
+    saveJson();
+}
+
+void History::remove(const QString& fileName)
+{
     history();
-}
 
-const QList<QString>& History::history()
-{
-    QDir directory(path());
-    QStringList images = directory.entryList(QStringList() << "*.png"
-                                                           << "*.PNG",
-                                             QDir::Files,
-                                             QDir::Time);
-    int cnt = 0;
-    m_thumbs.clear();
-    foreach (QString fileName, images) {
-        if (++cnt <= HISTORY_MAX_SIZE) {
-            m_thumbs.append(fileName);
-        } else {
-            QFile file(path() + fileName);
-            file.remove();
-        }
+    m_history.remove(fileName);
+    QFile file(path() + fileName);
+    if (file.exists()) {
+        file.remove();
     }
-    return m_thumbs;
+
+    saveJson();
 }
 
-const HISTORY_FILE_NAME& History::unpackFileName(const QString& fileNamePacked)
+const QMap<QString, HistoryItem>& History::history()
 {
-    int nPathIndex = fileNamePacked.lastIndexOf("/");
-    QStringList unpackedFileName;
-    if (nPathIndex == -1) {
-        unpackedFileName = fileNamePacked.split("-");
+    m_history = QMap<QString, HistoryItem>();
+    QFile file = QFile(path() + "metadata.json");
+    if (file.exists() && file.open(QIODevice::ReadOnly)) {
+        QByteArray jsonBytes = file.readAll();
+        QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
+        m_historyMetadata = doc.object();
     } else {
-        unpackedFileName = fileNamePacked.mid(nPathIndex + 1).split("-");
+        m_historyMetadata = QJsonObject();
     }
 
-    switch (unpackedFileName.length()) {
-        case 3:
-            m_unpackedFileName.file = unpackedFileName[2];
-            m_unpackedFileName.token = unpackedFileName[1];
-            m_unpackedFileName.type = unpackedFileName[0];
-            break;
-        case 2:
-            m_unpackedFileName.file = unpackedFileName[1];
-            m_unpackedFileName.token = "";
-            m_unpackedFileName.type = unpackedFileName[0];
-            break;
-        default:
-            m_unpackedFileName.file = unpackedFileName[0];
-            m_unpackedFileName.token = "";
-            m_unpackedFileName.type = "";
-            break;
+    foreach (const QString& key, m_historyMetadata.keys()) {
+        QJsonObject historyItem = m_historyMetadata[key].toObject();
+        m_history.insert(key,
+                         HistoryItem(historyItem["imageUrl"].toString(),
+                                     historyItem["deleteUrl"].toString()));
     }
-    return m_unpackedFileName;
-}
 
-const QString& History::packFileName(const QString& storageType,
-                                     const QString& deleteToken,
-                                     const QString& fileName)
-{
-    m_packedFileName = fileName;
-    if (storageType.length() > 0) {
-        if (deleteToken.length() > 0) {
-            m_packedFileName =
-              storageType + "-" + deleteToken + "-" + m_packedFileName;
-        } else {
-            m_packedFileName = storageType + "-" + m_packedFileName;
-        }
-    }
-    return m_packedFileName;
+    return m_history;
 }

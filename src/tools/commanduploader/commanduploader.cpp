@@ -139,10 +139,7 @@ void CommandUploader::processExited(int exitCode)
             bool showDelete = false;
 
             if (fileName.isEmpty()) {
-                QString currentDateTime = QDateTime::currentDateTime()
-                                            .toString(Qt::ISODate)
-                                            .replace(":", "-");
-                fileName = currentDateTime + ".png";
+                fileName = FileNameHandler().parsedPattern() + ".png";
             }
             if (!deleteUrl.isEmpty()) {
                 m_deleteImageURL.setUrl(deleteUrl);

@@ -10,6 +10,7 @@
 #include "src/widgets/loadspinner.h"
 #include "src/widgets/notificationwidget.h"
 #include <QApplication>
+#include <QtGlobal>
 #include <QBuffer>
 #include <QClipboard>
 #include <QCursor>
@@ -87,9 +88,13 @@ void CommandUploader::upload()
     m_process = new QProcess();
     connect(m_process, SIGNAL(finished(int)), this, SLOT(processExited(int)));
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     QStringList tokens =
       QProcess::splitCommand(ConfigHandler().uploaderCommandValue());
     m_process->start(tokens[0], tokens.mid(1));
+#else
+    m_process->start(ConfigHandler().uploaderCommandValue());
+#endif
 
     m_process->write(byteArray);
     m_process->closeWriteChannel();

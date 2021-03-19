@@ -72,15 +72,18 @@ void HistoryWidget::loadHistory()
     // read history files
     History* history = History::getInstance();
     QMap<long long, HistoryItem> historyFiles = history->history();
+    QList<long long> historyKeys = historyFiles.keys();
 
     if (historyFiles.isEmpty()) {
         setEmptyMessage();
     } else {
         // generate history list
-        foreach (const long long timeStamp, historyFiles.keys()) {
-            HistoryItem item = historyFiles[timeStamp];
+        for (QList<long long>::reverse_iterator it = historyKeys.rbegin();
+             it != historyKeys.rend();
+             ++it) {
+            HistoryItem item = historyFiles[*it];
             addLine(history->path(),
-                    timeStamp,
+                    *it,
                     item.description,
                     item.fileName,
                     item.imageUrl,

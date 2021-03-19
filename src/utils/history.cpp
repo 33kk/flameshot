@@ -61,7 +61,7 @@ void History::saveJson()
     int toDelete =
       m_history.count() - ConfigHandler().uploadHistoryMaxSizeValue();
 
-    foreach (const long long timeStamp, m_history.keys()) {
+    for (const long long timeStamp : m_history.keys()) {
         HistoryItem historyItem = m_history.value(timeStamp);
         if (--toDelete >= 0) {
             QFile file = QFile(path() + historyItem.fileName);
@@ -138,7 +138,7 @@ const QMap<long long, HistoryItem>& History::history()
         QByteArray jsonBytes = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
         QJsonArray history = doc.array();
-        foreach (const QJsonValue& historyValue, history) {
+        for (const QJsonValue& historyValue : history) {
             QJsonObject historyItem = historyValue.toObject();
             long long timeStamp =
               historyItem["timeStamp"].toVariant().toLongLong();

@@ -88,7 +88,8 @@ void CommandUploader::upload()
 
     connect(m_process, SIGNAL(finished(int)), this, SLOT(processExited(int)));
 
-    m_process->start(ConfigHandler().uploaderCommandValue());
+    QStringList tokens = QProcess::splitCommand(ConfigHandler().uploaderCommandValue());
+    m_process->start(tokens[0], tokens.mid(1));
     m_process->write(byteArray);
 
     m_process->closeWriteChannel();

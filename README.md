@@ -175,12 +175,12 @@ You can upload to any image hosting service using a command, which can be set in
 
 ```json
 {
-  "fileName": "filename.png",
+  "description": "i.example.com",
   "imageUrl": "https://i.example.com/filename.png",
   "deleteUrl": "https://i.example.com/delete/filename.png?token=123"
 }
 ```
-`fileName` and `deleteUrl` are optional.
+`description` and `deleteUrl` are optional.
 
 Example for i.nuuls.com:
 ```shell
@@ -189,7 +189,7 @@ curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload"
 
 Example for sxcu.net:
 ```shell
-sh -c "curl --silent -X POST -F 'image=@-;type=image/png;filename=s.png' -F noembed=true 'https://sxcu.net/upload' | jq '{fileName: (.url[17:]), imageUrl: .url, deleteUrl: .del_url}'"
+sh -c "curl --silent -X POST -F 'image=@-;type=image/png;filename=s.png' -F noembed=true 'https://sxcu.net/upload' | jq '{description: ("""sxcu.net: """ +  .url[17:-4]), imageUrl: .url, deleteUrl: .del_url}'"
 ```
 
 ## Keyboard shortcuts

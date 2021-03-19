@@ -42,17 +42,23 @@ BuildRequires: pkgconfig(Qt5Network) >= 5.9.0
 BuildRequires: pkgconfig(Qt5Widgets)  >= 5.9.0
 BuildRequires: pkgconfig(Qt5Svg)  >= 5.9.0
 
-
 %if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos_version}
 Requires: qt5-qtbase >= 5.9.0
 Requires: qt5-qttools >= 5.9.0
 Requires: qt5-qtsvg >= 5.9.0
+Requires: tesseract >= 4.0.0
+Requires: tesseract-devel >= 4.0.0
 %endif
 %if 0%{?is_opensuse}
 Requires: libQt5Core5 >= 5.9.0
 Requires: libqt5-qttools >= 5.9.0
 Requires: libQt5Svg5 >= 5.9.0
+Requires: libtesseract4 >= 4.0.0
+Requires: libtesseract-ocr >= 4.0.0
+Requires: libtesseract-ocr-devel >= 4.0.0
+Requires: tesseract-devel >= 4.0.0
 %endif
+Requires: leptonica-devel >= 1.0.0
 Requires: hicolor-icon-theme
 
 %description

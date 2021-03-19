@@ -49,6 +49,9 @@ jobs:
 
       - name: Install Qt
         run: brew install qt@5 cmake
+      
+      - name: Install Tesseract
+        run: brew install tesseract leptonica
 
       - name: Configure
         run: |

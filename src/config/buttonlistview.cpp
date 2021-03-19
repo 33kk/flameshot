@@ -5,6 +5,7 @@
 #include "src/tools/toolfactory.h"
 #include "src/utils/confighandler.h"
 #include <QListWidgetItem>
+#include <QDebug>
 #include <algorithm>
 
 ButtonListView::ButtonListView(QWidget* parent)

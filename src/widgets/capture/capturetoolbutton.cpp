@@ -130,6 +130,7 @@ static std::map<CaptureToolButton::ButtonType, int> buttonTypeOrder
 
       { CaptureToolButton::TYPE_SIZEINCREASE, 21 },
       { CaptureToolButton::TYPE_SIZEDECREASE, 22 },
+      { CaptureToolButton::TYPE_OCR, 23 },
 };
 
 int CaptureToolButton::getPriorityByButton(CaptureToolButton::ButtonType b)
@@ -166,4 +167,5 @@ QVector<CaptureToolButton::ButtonType>
       CaptureToolButton::TYPE_CIRCLECOUNT,
       CaptureToolButton::TYPE_SIZEINCREASE,
       CaptureToolButton::TYPE_SIZEDECREASE,
+      CaptureToolButton::TYPE_OCR,
   };

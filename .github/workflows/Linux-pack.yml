@@ -231,6 +231,9 @@ jobs:
             libqt5widgets5 \
             libqt5gui5 \
             libqt5svg5-dev \
+            tesseract-ocr \
+            libtesseract-dev \
+            libleptonica-dev \
             python3 \
             python3-pip
       - name: Prepare cmake(>=3.13.0)
@@ -435,6 +438,9 @@ jobs:
             libqt5widgets5 \
             libqt5gui5 \
             libqt5svg5-dev \
+            tesseract-ocr \
+            libtesseract-dev \
+            libleptonica-dev \
             appstream \
             hicolor-icon-theme \
             fcitx-frontend-qt5 \

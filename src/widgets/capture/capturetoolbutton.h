@@ -43,6 +43,7 @@ public:
         TYPE_CIRCLECOUNT = 20,
         TYPE_SIZEINCREASE = 21,
         TYPE_SIZEDECREASE = 22,
+        TYPE_OCR = 23,
     };
     Q_ENUM(ButtonType)
 

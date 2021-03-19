@@ -9,6 +9,9 @@ Build-Depends:
  qttools5-dev (>= 5.9.0~),
  qttools5-dev-tools (>= 5.9.0~),
  libqt5svg5-dev (>= 5.9.0~),
+ libtesseract4 (>= 4.0.0~)
+ libtesseract-dev (>= 4.0.0~)
+ libleptonica-dev (>= 1.79.0~)
 Standards-Version: 4.5.0
 Homepage: https://github.com/flameshot-org/flameshot
 Vcs-Browser: https://github.com/flameshot-org/flameshot

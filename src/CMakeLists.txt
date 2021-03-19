@@ -165,6 +165,8 @@ target_link_libraries(
         Qt5::Widgets
         SingleApplication::SingleApplication
         spdlog::spdlog
+        tesseract
+        leptonica
 )
 
 if (APPLE)

@@ -121,6 +121,9 @@ const QKeySequence& ConfigShortcuts::captureShortcutDefault(
         case CaptureToolButton::ButtonType::TYPE_COPY:
             m_ks = QKeySequence(Qt::CTRL + Qt::Key_C);
             break;
+        case CaptureToolButton::ButtonType::TYPE_OCR:
+            m_ks = QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_C);
+            break;
         case CaptureToolButton::ButtonType::TYPE_SAVE:
             m_ks = QKeySequence(Qt::CTRL + Qt::Key_S);
             break;

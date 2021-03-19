@@ -7,6 +7,7 @@
 #include "circlecount/circlecounttool.h"
 #include "commanduploader/commanduploadertool.h"
 #include "copy/copytool.h"
+#include "ocr/ocrtool.h"
 #include "exit/exittool.h"
 #include "imguruploader/imguruploadertool.h"
 #include "launcher/applaunchertool.h"
@@ -44,6 +45,9 @@ CaptureTool* ToolFactory::CreateTool(CaptureToolButton::ButtonType t,
             break;
         case CaptureToolButton::TYPE_COPY:
             tool = new CopyTool(parent);
+            break;
+        case CaptureToolButton::TYPE_OCR:
+            tool = new OcrTool(parent);
             break;
         case CaptureToolButton::TYPE_EXIT:
             tool = new ExitTool(parent);

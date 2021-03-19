@@ -1,5 +1,6 @@
 #include "history.h"
 #include "src/utils/confighandler.h"
+#include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QJsonArray>

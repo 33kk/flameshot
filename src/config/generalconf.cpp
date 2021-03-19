@@ -9,7 +9,6 @@
 #include <QFileDialog>
 #include <QGroupBox>
 #include <QLineEdit>
-#include <QSpinBox>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSpinBox>

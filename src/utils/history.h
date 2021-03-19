@@ -13,7 +13,10 @@ class HistoryItem
 {
 public:
     HistoryItem();
-    HistoryItem(QString description, QString fileName, QString imageUrl, QString deleteUrl);
+    HistoryItem(QString description,
+                QString fileName,
+                QString imageUrl,
+                QString deleteUrl);
 
     QString description;
     QString fileName;

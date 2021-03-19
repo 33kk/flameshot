@@ -79,7 +79,12 @@ void HistoryWidget::loadHistory()
         // generate history list
         foreach (const long long timeStamp, historyFiles.keys()) {
             HistoryItem item = historyFiles[timeStamp];
-            addLine(history->path(), timeStamp, item.description, item.fileName, item.imageUrl, item.deleteUrl);
+            addLine(history->path(),
+                    timeStamp,
+                    item.description,
+                    item.fileName,
+                    item.imageUrl,
+                    item.deleteUrl);
         }
     }
 }
@@ -121,7 +126,8 @@ void HistoryWidget::addLine(const QString& path,
     // get file info
     QFileInfo* pFileInfo = new QFileInfo(fullFileName);
     QString lastModified =
-      pFileInfo->lastModified().toString("yyyy-MM-dd\nhh:mm:ss\n") + description;
+      pFileInfo->lastModified().toString("yyyy-MM-dd\nhh:mm:ss\n") +
+      description;
 
     // screenshot preview
     QLabel* pScreenshot = new QLabel();

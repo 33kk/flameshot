@@ -173,8 +173,8 @@ int main(int argc, char* argv[])
                                   QObject::tr("Define the main UI color"),
                                   QStringLiteral("color-code"));
     CommandOption uploadCommandOption({ "u", "uploadcommand" },
-                                  QObject::tr("Image Uploader Command"),
-                                  QStringLiteral("command"));
+                                      QObject::tr("Image Uploader Command"),
+                                      QStringLiteral("command"));
     CommandOption contrastColorOption(
       { "k", "contrastcolor" },
       QObject::tr("Define the contrast UI color"),
@@ -433,8 +433,8 @@ int main(int argc, char* argv[])
         bool uploadCommand = parser.isSet(uploadCommandOption);
         bool mainColor = parser.isSet(mainColorOption);
         bool contrastColor = parser.isSet(contrastColorOption);
-        bool someFlagSet =
-          (filename || tray || help || uploadCommand || mainColor || contrastColor);
+        bool someFlagSet = (filename || tray || help || uploadCommand ||
+                            mainColor || contrastColor);
         ConfigHandler config;
         if (autostart) {
             QDBusMessage m = QDBusMessage::createMethodCall(

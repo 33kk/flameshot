@@ -174,8 +174,11 @@ void HistoryWidget::addLine(const QString& path,
               QMessageBox::question(
                 this,
                 tr("Confirm to delete"),
-                tr("Are you sure you want to delete a screenshot from the "
-                   "latest uploads and server?"),
+                deleteUrl.isEmpty()
+                  ? tr("Are you sure you want to delete a screenshot from the "
+                       "latest uploads?")
+                  : tr("Are you sure you want to delete a screenshot from the "
+                       "latest uploads and server?"),
                 QMessageBox::Yes | QMessageBox::No)) {
             return;
         }

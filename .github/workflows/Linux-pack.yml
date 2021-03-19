@@ -4,6 +4,7 @@ on:
   push:
     branches: 
       - master
+      - tesseract
     paths-ignore:
       - 'README.md'
       - 'LICENSE'

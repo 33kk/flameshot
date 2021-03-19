@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - tesseract
       - feature/RND-680-macos-.dmg-package-build
     paths-ignore:
       - 'README.md'

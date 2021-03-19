@@ -79,6 +79,9 @@ public:
     QString uploaderCommandValue();
     void setUploaderCommand(const QString&);
 
+    int uploadHistoryMaxSizeValue();
+    void setUploadHistoryMaxSize(const int);
+
     bool copyPathAfterSaveEnabled();
     void setCopyPathAfterSaveEnabled(const bool);
 

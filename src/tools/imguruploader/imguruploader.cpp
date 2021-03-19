@@ -31,6 +31,7 @@
 #include <QTimer>
 #include <QUrlQuery>
 #include <QVBoxLayout>
+#include <QRegExp>
 
 ImgurUploader::ImgurUploader(const QPixmap& capture, QWidget* parent)
   : QWidget(parent)
@@ -87,16 +88,16 @@ void ImgurUploader::handleReply(QNetworkReply* reply)
         m_deleteImageURL.setUrl(deleteImageUrl);
 
         // save history
-        QString imageName = m_imageURL.toString();
-        int lastSlash = imageName.lastIndexOf("/");
+        QString description = m_imageURL.toString();
+        int lastSlash = description.lastIndexOf("/");
         if (lastSlash >= 0) {
-            imageName = imageName.mid(lastSlash + 1);
+            description = description.mid(lastSlash + 1);
         }
-        imageName = "imgur-" + imageName;
+        description = "Imgur: " + description.replace(QRegExp("\\.png$"), "");
 
         // save image to history
         History* history = History::getInstance();
-        history->save(m_pixmap, imageName, imageUrl, deleteImageUrl);
+        history->save(m_pixmap, description, imageUrl, deleteImageUrl);
 
         if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {
             SystemNotification().sendMessage(

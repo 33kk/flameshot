@@ -71,15 +71,15 @@ void HistoryWidget::loadHistory()
 
     // read history files
     History* history = History::getInstance();
-    QMap<QString, HistoryItem> historyFiles = history->history();
+    QMap<long long, HistoryItem> historyFiles = history->history();
 
     if (historyFiles.isEmpty()) {
         setEmptyMessage();
     } else {
         // generate history list
-        foreach (const QString& key, historyFiles.keys()) {
-            HistoryItem item = historyFiles[key];
-            addLine(history->path(), key, item.imageUrl, item.deleteUrl);
+        foreach (const long long timeStamp, historyFiles.keys()) {
+            HistoryItem item = historyFiles[timeStamp];
+            addLine(history->path(), timeStamp, item.description, item.fileName, item.imageUrl, item.deleteUrl);
         }
     }
 }
@@ -94,6 +94,8 @@ void HistoryWidget::setEmptyMessage()
 }
 
 void HistoryWidget::addLine(const QString& path,
+                            const long long timeStamp,
+                            const QString& description,
                             const QString& fileName,
                             const QString& imageUrl,
                             const QString& deleteUrl)
@@ -117,7 +119,7 @@ void HistoryWidget::addLine(const QString& path,
     // get file info
     QFileInfo* pFileInfo = new QFileInfo(fullFileName);
     QString lastModified =
-      pFileInfo->lastModified().toString("yyyy-MM-dd\nhh:mm:ss\n") + fileName;
+      pFileInfo->lastModified().toString("yyyy-MM-dd\nhh:mm:ss\n") + description;
 
     // screenshot preview
     QLabel* pScreenshot = new QLabel();
@@ -169,7 +171,7 @@ void HistoryWidget::addLine(const QString& path,
         QDesktopServices::openUrl(QUrl(deleteUrl));
 
         History* history = History::getInstance();
-        history->remove(fileName);
+        history->remove(timeStamp);
         removeLayoutItem(phbl);
     });
 

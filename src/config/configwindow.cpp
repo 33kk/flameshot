@@ -23,7 +23,7 @@ ConfigWindow::ConfigWindow(QWidget* parent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumSize(GlobalValues::buttonBaseSize() * 15,
-                   GlobalValues::buttonBaseSize() * 18);
+                   GlobalValues::buttonBaseSize() * 20);
     setWindowIcon(QIcon(":img/app/flameshot.svg"));
     setWindowTitle(tr("Configuration"));
 

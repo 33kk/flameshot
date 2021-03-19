@@ -163,6 +163,9 @@ int main(int argc, char* argv[])
     CommandOption mainColorOption({ "m", "maincolor" },
                                   QObject::tr("Define the main UI color"),
                                   QStringLiteral("color-code"));
+    CommandOption uploadCommandOption({ "u", "uploadcommand" },
+                                  QObject::tr("Image Uploader Command"),
+                                  QStringLiteral("command"));
     CommandOption contrastColorOption(
       { "k", "contrastcolor" },
       QObject::tr("Define the contrast UI color"),
@@ -252,6 +255,7 @@ int main(int argc, char* argv[])
       fullArgument);
     parser.AddOptions({ autostartOption,
                         filenameOption,
+                        uploadCommandOption,
                         trayOption,
                         showHelpOption,
                         mainColorOption,
@@ -417,10 +421,11 @@ int main(int argc, char* argv[])
         bool filename = parser.isSet(filenameOption);
         bool tray = parser.isSet(trayOption);
         bool help = parser.isSet(showHelpOption);
+        bool uploadCommand = parser.isSet(uploadCommandOption);
         bool mainColor = parser.isSet(mainColorOption);
         bool contrastColor = parser.isSet(contrastColorOption);
         bool someFlagSet =
-          (filename || tray || help || mainColor || contrastColor);
+          (filename || tray || help || uploadCommand || mainColor || contrastColor);
         ConfigHandler config;
         if (autostart) {
             QDBusMessage m = QDBusMessage::createMethodCall(
@@ -474,6 +479,10 @@ int main(int argc, char* argv[])
             } else if (parser.value(showHelpOption) == QLatin1String("true")) {
                 config.setShowHelp(true);
             }
+        }
+        if (uploadCommand) {
+            QString command = parser.value(uploadCommandOption);
+            config.setUploaderCommand(command);
         }
         if (mainColor) {
             QString colorCode = parser.value(mainColorOption);

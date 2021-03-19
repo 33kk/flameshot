@@ -2,14 +2,14 @@
 // SPDX-FileCopyrightText: 2017-2019 Alejandro Sirgo Rica & Contributors
 
 #include "ocrtool.h"
+#include "leptonica/allheaders.h"
 #include "src/utils/screenshotsaver.h"
 #include "src/utils/tesseractutils.h"
 #include "tesseract/baseapi.h"
-#include "leptonica/allheaders.h"
-#include <QPainter>
 #include <QApplication>
 #include <QClipboard>
 #include <QDebug>
+#include <QPainter>
 
 OcrTool::OcrTool(QObject* parent)
   : AbstractActionTool(parent)
@@ -47,13 +47,13 @@ CaptureTool* OcrTool::copy(QObject* parent)
 
 void OcrTool::pressed(const CaptureContext& context)
 {
-    PIX *image = TesseractUtils::qImageToPIX(context.selectedScreenshotArea().toImage());
-    QString text = TesseractUtils::OCR("/home/marko/Downloads/tessdata", "eng", image);
+    PIX* image =
+      TesseractUtils::qImageToPIX(context.selectedScreenshotArea().toImage());
+    QString text =
+      TesseractUtils::OCR("/home/marko/Downloads/tessdata", "eng", image);
     delete image;
 
     QApplication::clipboard()->setText(text);
     qDebug() << text;
     emit requestAction(REQ_CAPTURE_DONE_OK);
 }
-
-

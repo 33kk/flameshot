@@ -4,8 +4,10 @@
 #include <leptonica/allheaders.h>
 #include <tesseract/baseapi.h>
 
-// Copypasted from https://github.com/flameshot-org/flameshot/pull/1239/files#diff-ba599ebf38d0a6a0fbb4f66e3949ed60bfdfbe82411cfe127e3c5617f0938460
-// Thanks to Stackoverflow user "user898678": https://stackoverflow.com/a/10019508
+// Copypasted from
+// https://github.com/flameshot-org/flameshot/pull/1239/files#diff-ba599ebf38d0a6a0fbb4f66e3949ed60bfdfbe82411cfe127e3c5617f0938460
+// Thanks to Stackoverflow user "user898678":
+// https://stackoverflow.com/a/10019508
 // https://github.com/zdenop/qt-box-editor/blob/master/src/TessTools.cpp
 // LICENSE: https://github.com/zdenop/qt-box-editor/blob/master/LICENSE
 // modified version
@@ -42,8 +44,9 @@ public:
         return pixEndianByteSwapNew(pixs);
     }
 
-    static QString OCR(const char *data, const char *language, PIX* image) {
-        tesseract::TessBaseAPI *tesseractApi = new tesseract::TessBaseAPI();
+    static QString OCR(const char* data, const char* language, PIX* image)
+    {
+        tesseract::TessBaseAPI* tesseractApi = new tesseract::TessBaseAPI();
 
         if (tesseractApi->Init(data, language)) {
             return "";
@@ -51,12 +54,12 @@ public:
 
         tesseractApi->SetImage(image);
 
-        char *outText = tesseractApi->GetUTF8Text();
+        char* outText = tesseractApi->GetUTF8Text();
         const QString qString = outText;
 
         tesseractApi->End();
         delete tesseractApi;
-        delete [] outText;
+        delete[] outText;
 
         return qString;
     }

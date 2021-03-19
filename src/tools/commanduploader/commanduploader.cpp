@@ -85,13 +85,13 @@ void CommandUploader::upload()
     m_pixmap.save(&buffer, "PNG");
 
     m_process = new QProcess();
-
     connect(m_process, SIGNAL(finished(int)), this, SLOT(processExited(int)));
 
-    QStringList tokens = QProcess::splitCommand(ConfigHandler().uploaderCommandValue());
+    QStringList tokens =
+      QProcess::splitCommand(ConfigHandler().uploaderCommandValue());
     m_process->start(tokens[0], tokens.mid(1));
-    m_process->write(byteArray);
 
+    m_process->write(byteArray);
     m_process->closeWriteChannel();
 }
 

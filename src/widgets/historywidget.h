@@ -24,6 +24,8 @@ private:
     void clearHistoryLayout(QLayout* layout);
 
     void addLine(const QString& path,
+                 const long long timeStamp,
+                 const QString& description,
                  const QString& fileName,
                  const QString& imageUrl,
                  const QString& deleteUrl);

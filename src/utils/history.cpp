@@ -2,17 +2,17 @@
 #include "src/utils/confighandler.h"
 #include <QDir>
 #include <QFile>
+#include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonArray>
 #include <QProcessEnvironment>
 #include <QStringList>
 
 HistoryItem::HistoryItem() {}
-HistoryItem::HistoryItem(QString imageUrl)
+HistoryItem::HistoryItem(QString description, QString fileName, QString imageUrl, QString deleteUrl)
 {
-    this->imageUrl = imageUrl;
-}
-HistoryItem::HistoryItem(QString imageUrl, QString deleteUrl)
-{
+    this->description = description;
+    this->fileName = fileName;
     this->imageUrl = imageUrl;
     this->deleteUrl = deleteUrl;
 }
@@ -20,7 +20,6 @@ HistoryItem::HistoryItem(QString imageUrl, QString deleteUrl)
 History::History()
 {
     // Get cache history path
-    ConfigHandler config;
 #ifdef Q_OS_WIN
     m_historyPath = QDir::homePath() + "/AppData/Roaming/flameshot/history/";
 #else
@@ -33,8 +32,6 @@ History::History()
     QDir dir = QDir(m_historyPath);
     if (!dir.exists())
         dir.mkpath(".");
-
-    history();
 }
 
 const QString& History::path()
@@ -54,27 +51,40 @@ History* History::getInstance()
 
 void History::saveJson()
 {
-    QJsonDocument metadataDocument = QJsonDocument();
-    QJsonObject metadataObject = QJsonObject();
+    QJsonDocument historyDocument = QJsonDocument();
+    QJsonArray history = QJsonArray();
 
-    foreach (const QString& key, m_history.keys()) {
-        HistoryItem historyItem = m_history.value(key);
-        QJsonObject obj = QJsonObject();
-        obj["imageUrl"] = historyItem.imageUrl;
-        if (!historyItem.deleteUrl.isEmpty()) {
-            obj["deleteUrl"] = historyItem.deleteUrl;
+    int toDelete = m_history.count() - ConfigHandler().uploadHistoryMaxSizeValue();
+
+    foreach (const long long timeStamp, m_history.keys()) {
+        HistoryItem historyItem = m_history.value(timeStamp);
+        if (--toDelete >= 0) {
+            QFile file = QFile(path() + historyItem.fileName);
+            if (file.exists()) {
+                file.remove();
+            }
+            m_history.remove(timeStamp);
         }
-        metadataObject[key] = obj;
+        else {
+            QJsonObject obj = QJsonObject();
+            obj["timeStamp"] = timeStamp;
+            obj["description"] = historyItem.description;
+            obj["imageUrl"] = historyItem.imageUrl;
+            if (!historyItem.deleteUrl.isEmpty()) {
+                obj["deleteUrl"] = historyItem.deleteUrl;
+            }
+            history.append(obj);
+        }
     }
-    metadataDocument.setObject(metadataObject);
+    historyDocument.setArray(history);
 
-    QFile metadataFile = QFile(path() + "metadata.json");
-    metadataFile.open(QIODevice::WriteOnly);
-    metadataFile.write(metadataDocument.toJson());
+    QFile historyFile = QFile(path() + "history.json");
+    historyFile.open(QIODevice::WriteOnly);
+    historyFile.write(historyDocument.toJson());
 }
 
 void History::save(const QPixmap& pixmap,
-                   const QString& fileName,
+                   const QString& description,
                    const QString& imageUrl,
                    const QString& deleteUrl)
 {
@@ -92,44 +102,48 @@ void History::save(const QPixmap& pixmap,
     }
 
     // save preview
+    long long timeStamp = QDateTime::currentSecsSinceEpoch();
+    QString fileName = QString::number(timeStamp) + ".png";
     QFile file(path() + fileName);
     file.open(QIODevice::WriteOnly);
     pixmapScaled.save(&file, "PNG");
-    m_history.insert(fileName, HistoryItem(imageUrl, deleteUrl));
+    m_history.insert(timeStamp, HistoryItem(description, fileName, imageUrl, deleteUrl));
 
     saveJson();
 }
 
-void History::remove(const QString& fileName)
+void History::remove(const long long timeStamp)
 {
     history();
 
-    m_history.remove(fileName);
-    QFile file(path() + fileName);
+    QFile file(path() + m_history[timeStamp].fileName);
     if (file.exists()) {
         file.remove();
     }
+    m_history.remove(timeStamp);
 
     saveJson();
 }
 
-const QMap<QString, HistoryItem>& History::history()
+const QMap<long long, HistoryItem>& History::history()
 {
-    m_history = QMap<QString, HistoryItem>();
-    QFile file = QFile(path() + "metadata.json");
+    m_history = QMap<long long, HistoryItem>();
+    QFile file = QFile(path() + "history.json");
     if (file.exists() && file.open(QIODevice::ReadOnly)) {
         QByteArray jsonBytes = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(jsonBytes);
-        m_historyMetadata = doc.object();
+        QJsonArray history = doc.array();
+        foreach (const QJsonValue& historyValue, history) {
+            QJsonObject historyItem = historyValue.toObject();
+            long long timeStamp = historyItem["timeStamp"].toVariant().toLongLong();
+            m_history.insert(timeStamp,
+                             HistoryItem(historyItem["description"].toString(),
+                                         QString::number(timeStamp) + ".png",
+                                         historyItem["imageUrl"].toString(),
+                                         historyItem["deleteUrl"].toString()));
+        }
     } else {
-        m_historyMetadata = QJsonObject();
-    }
-
-    foreach (const QString& key, m_historyMetadata.keys()) {
-        QJsonObject historyItem = m_historyMetadata[key].toObject();
-        m_history.insert(key,
-                         HistoryItem(historyItem["imageUrl"].toString(),
-                                     historyItem["deleteUrl"].toString()));
+        return m_history;
     }
 
     return m_history;

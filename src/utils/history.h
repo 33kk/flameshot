@@ -13,9 +13,10 @@ class HistoryItem
 {
 public:
     HistoryItem();
-    HistoryItem(QString imageUrl);
-    HistoryItem(QString imageUrl, QString deleteUrl);
+    HistoryItem(QString description, QString fileName, QString imageUrl, QString deleteUrl);
 
+    QString description;
+    QString fileName;
     QString imageUrl;
     QString deleteUrl;
 };
@@ -24,11 +25,11 @@ class History
 {
 public:
     void save(const QPixmap& pixmap,
-              const QString& fileName,
+              const QString& description,
               const QString& imageUrl,
               const QString& deleteUrl);
-    void remove(const QString& fileName);
-    const QMap<QString, HistoryItem>& history();
+    void remove(const long long timeStamp);
+    const QMap<long long, HistoryItem>& history();
     const QString& path();
     static History* getInstance();
 
@@ -37,8 +38,7 @@ private:
 
     void saveJson();
     QString m_historyPath;
-    QJsonObject m_historyMetadata;
-    QMap<QString, HistoryItem> m_history;
+    QMap<long long, HistoryItem> m_history;
     static History* m_instance;
 };
 

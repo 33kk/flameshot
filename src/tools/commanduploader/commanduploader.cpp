@@ -101,15 +101,15 @@ void CommandUploader::processExited(int exitCode)
     QString error =
       QString::fromStdString(m_process->readAllStandardError().toStdString());
     if (exitCode == 0) {
-        QString fileName = "";
+        QString description = "";
         QString imageUrl = "";
         QString deleteUrl = "";
 
         QJsonDocument doc = QJsonDocument::fromJson(resultByteArr);
         if (!doc.isNull()) {
             QJsonObject obj = doc.object();
-            if (obj["fileName"].isString()) {
-                fileName = obj["fileName"].toString();
+            if (obj["description"].isString()) {
+                description = obj["description"].toString();
             }
             if (obj["imageUrl"].isString()) {
                 imageUrl = obj["imageUrl"].toString();
@@ -138,15 +138,15 @@ void CommandUploader::processExited(int exitCode)
             History* history = History::getInstance();
             bool showDelete = false;
 
-            if (fileName.isEmpty()) {
-                fileName = FileNameHandler().parsedPattern() + ".png";
+            if (description.isEmpty()) {
+                description = FileNameHandler().parsedPattern();
             }
             if (!deleteUrl.isEmpty()) {
                 m_deleteImageURL.setUrl(deleteUrl);
                 showDelete = true;
             }
 
-            history->save(m_pixmap, fileName, imageUrl, deleteUrl);
+            history->save(m_pixmap, description, imageUrl, deleteUrl);
 
             if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {
                 QApplication::clipboard()->setText(imageUrl);

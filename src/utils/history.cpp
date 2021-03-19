@@ -2,14 +2,17 @@
 #include "src/utils/confighandler.h"
 #include <QDir>
 #include <QFile>
-#include <QJsonObject>
-#include <QJsonDocument>
 #include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QProcessEnvironment>
 #include <QStringList>
 
 HistoryItem::HistoryItem() {}
-HistoryItem::HistoryItem(QString description, QString fileName, QString imageUrl, QString deleteUrl)
+HistoryItem::HistoryItem(QString description,
+                         QString fileName,
+                         QString imageUrl,
+                         QString deleteUrl)
 {
     this->description = description;
     this->fileName = fileName;
@@ -54,7 +57,8 @@ void History::saveJson()
     QJsonDocument historyDocument = QJsonDocument();
     QJsonArray history = QJsonArray();
 
-    int toDelete = m_history.count() - ConfigHandler().uploadHistoryMaxSizeValue();
+    int toDelete =
+      m_history.count() - ConfigHandler().uploadHistoryMaxSizeValue();
 
     foreach (const long long timeStamp, m_history.keys()) {
         HistoryItem historyItem = m_history.value(timeStamp);
@@ -64,8 +68,7 @@ void History::saveJson()
                 file.remove();
             }
             m_history.remove(timeStamp);
-        }
-        else {
+        } else {
             QJsonObject obj = QJsonObject();
             obj["timeStamp"] = timeStamp;
             obj["description"] = historyItem.description;
@@ -105,7 +108,8 @@ void History::save(const QPixmap& pixmap,
     QFile file(path() + fileName);
     file.open(QIODevice::WriteOnly);
     pixmapScaled.save(&file, "PNG");
-    m_history.insert(timeStamp, HistoryItem(description, fileName, imageUrl, deleteUrl));
+    m_history.insert(timeStamp,
+                     HistoryItem(description, fileName, imageUrl, deleteUrl));
 
     saveJson();
 }
@@ -133,7 +137,8 @@ const QMap<long long, HistoryItem>& History::history()
         QJsonArray history = doc.array();
         foreach (const QJsonValue& historyValue, history) {
             QJsonObject historyItem = historyValue.toObject();
-            long long timeStamp = historyItem["timeStamp"].toVariant().toLongLong();
+            long long timeStamp =
+              historyItem["timeStamp"].toVariant().toLongLong();
             m_history.insert(timeStamp,
                              HistoryItem(historyItem["description"].toString(),
                                          QString::number(timeStamp) + ".png",

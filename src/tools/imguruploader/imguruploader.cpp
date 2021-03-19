@@ -26,12 +26,12 @@
 #include <QNetworkRequest>
 #include <QPushButton>
 #include <QRect>
+#include <QRegExp>
 #include <QScreen>
 #include <QShortcut>
 #include <QTimer>
 #include <QUrlQuery>
 #include <QVBoxLayout>
-#include <QRegExp>
 
 ImgurUploader::ImgurUploader(const QPixmap& capture, QWidget* parent)
   : QWidget(parent)

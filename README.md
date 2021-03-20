@@ -188,7 +188,7 @@ You can upload to any image hosting service using a command, which can be set in
 
 Example for i.nuuls.com:
 ```shell
-curl -X POST -F "file=@/dev/stdin;type=image/png" "https://i.nuuls.com/upload"
+curl -X POST -F "file=@-;type=image/png" "https://i.nuuls.com/upload"
 ```
 
 Example for sxcu.net:

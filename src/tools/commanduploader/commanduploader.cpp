@@ -10,7 +10,6 @@
 #include "src/widgets/loadspinner.h"
 #include "src/widgets/notificationwidget.h"
 #include <QApplication>
-#include <QtGlobal>
 #include <QBuffer>
 #include <QClipboard>
 #include <QCursor>
@@ -32,6 +31,7 @@
 #include <QTimer>
 #include <QUrlQuery>
 #include <QVBoxLayout>
+#include <QtGlobal>
 
 CommandUploader::CommandUploader(const QPixmap& capture, QWidget* parent)
   : QWidget(parent)

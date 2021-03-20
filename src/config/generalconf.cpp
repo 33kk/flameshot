@@ -185,6 +185,7 @@ void GeneralConf::setActualFormData()
     m_saveAfterCopy->setChecked(config.saveAfterCopyValue());
     m_savePath->setText(config.savePath());
     m_uploaderCommand->setText(config.uploaderCommandValue());
+    m_uploadHistoryMaxSize->setValue(config.uploadHistoryMaxSizeValue());
     m_screenshotPathFixedCheck->setChecked(config.savePathFixed());
     m_historyConfirmationToDelete->setChecked(
       config.historyConfirmationToDelete());
@@ -444,7 +445,7 @@ void GeneralConf::initUploadHistoryMaxSize()
     m_uploadHistoryMaxSize->setMaximum(1000);
     m_uploadHistoryMaxSize->setValue(max);
     QString foreground = this->palette().windowText().color().name();
-    m_uploaderCommand->setStyleSheet(
+    m_uploadHistoryMaxSize->setStyleSheet(
       QStringLiteral("color: %1").arg(foreground));
 
     connect(m_uploadHistoryMaxSize,

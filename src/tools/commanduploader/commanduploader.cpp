@@ -155,9 +155,9 @@ void CommandUploader::processExited(int exitCode)
             history->save(m_pixmap, description, imageUrl, deleteUrl);
 
             if (ConfigHandler().copyAndCloseAfterUploadEnabled()) {
-                QApplication::clipboard()->setText(imageUrl);
                 SystemNotification().sendMessage(
                   QObject::tr("URL copied to clipboard."));
+                QApplication::clipboard()->setText(imageUrl);
                 close();
             }
             onUploadOk(showDelete);

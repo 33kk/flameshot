@@ -39,7 +39,6 @@ private slots:
     void togglePathFixed();
     void useJpgForClipboardChanged(bool checked);
     void uploaderCommandChanged();
-    void uploadHistoryMaxSizeChanged(int max);
 
 private:
     const QString chooseFolder(const QString currentPath = "");
@@ -58,7 +57,6 @@ private:
     void initCopyAndCloseAfterUpload();
     void initSaveAfterCopy();
     void initCommandUploader();
-    void initUploadHistoryMaxSize();
     void initCopyPathAfterSave();
     void initUseJpgForClipboard();
 
@@ -81,7 +79,6 @@ private:
     QCheckBox* m_saveAfterCopy;
     QLineEdit* m_savePath;
     QLineEdit* m_uploaderCommand;
-    QSpinBox* m_uploadHistoryMaxSize;
     QPushButton* m_changeSaveButton;
     QCheckBox* m_screenshotPathFixedCheck;
     QCheckBox* m_historyConfirmationToDelete;

@@ -429,41 +429,9 @@ void GeneralConf::initCommandUploader()
     vboxLayout->addWidget(m_uploaderCommand);
 }
 
-void GeneralConf::initUploadHistoryMaxSize()
-{
-    QGroupBox* box = new QGroupBox(tr("Latest Uploads Entry Limit"));
-    box->setFlat(true);
-    m_layout->addWidget(box);
-    m_layout->addStretch();
-
-    QVBoxLayout* vboxLayout = new QVBoxLayout();
-    box->setLayout(vboxLayout);
-
-    int max = ConfigHandler().uploadHistoryMaxSizeValue();
-
-    m_uploadHistoryMaxSize = new QSpinBox(this);
-    m_uploadHistoryMaxSize->setMaximum(1000);
-    m_uploadHistoryMaxSize->setValue(max);
-    QString foreground = this->palette().windowText().color().name();
-    m_uploadHistoryMaxSize->setStyleSheet(
-      QStringLiteral("color: %1").arg(foreground));
-
-    connect(m_uploadHistoryMaxSize,
-            SIGNAL(valueChanged(int)),
-            this,
-            SLOT(uploadHistoryMaxSizeChanged(int)));
-
-    vboxLayout->addWidget(m_uploadHistoryMaxSize);
-}
-
 void GeneralConf::uploaderCommandChanged()
 {
     ConfigHandler().setUploaderCommand(m_uploaderCommand->text());
-}
-
-void GeneralConf::uploadHistoryMaxSizeChanged(int max)
-{
-    ConfigHandler().setUploadHistoryMaxSize(max);
 }
 
 void GeneralConf::historyConfirmationToDelete(bool checked)
